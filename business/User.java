@@ -1,17 +1,24 @@
 package business;
 
 import java.util.Objects;
-public class User{
+public class User {
     private String username;
     private String password;
     private boolean AdminStatus;
-    public User(){
+
+    public User() {
 
     }
-    public User(String username, String password, boolean adminStatus){
+
+    public User(String username, String password, boolean adminStatus) {
         this.password = password;
         this.username = username;
         this.AdminStatus = adminStatus;
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
     public String getUsername() {
@@ -51,7 +58,4 @@ public class User{
         return Objects.hash(username);
     }
 
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), getUsername(), getPassword(), isAdminStatus());
-    }
 }
