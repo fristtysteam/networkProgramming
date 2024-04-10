@@ -1,6 +1,9 @@
 package business;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserManager {
     private final ArrayList<User> userArrayList = new ArrayList<User>();
@@ -23,7 +26,7 @@ public class UserManager {
      * @return true if user was added , false if the user wasnt added and false if the user already exists.
      */
     public boolean addUser(String username, String password) {
-        User user = new User(username, password);
+      User user = new User(username, password);
         if (userArrayList.contains(user)) {
             System.out.println("User Already Exists");
             return false;
