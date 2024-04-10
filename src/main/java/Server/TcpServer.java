@@ -92,8 +92,17 @@ public class TcpServer {
                     return  FilmService.FAILED;
                 }
             case "logout":
-                // Not implemented in this example
                 return FilmService.LOGGED_OUT;
+            case "rate":
+                if (parts.length < 3) {
+                    return FilmService.INVALID;
+                }
+                return filmManager.rateFilm(parts[0], Double.parseDouble(parts[1])) ? FilmService.SUCCESS:FilmService.NO_MATCH;
+
+            case "exit":
+                return "GOODBYE";
+            case "shutdown":
+                return "SHUTTING_DOWN";
             default:
                 return FilmService.INVALID;
         }
