@@ -11,6 +11,8 @@ public class FilmService {
     // Requests
 
     // Responses
+
+    public static final String EXISTS = "EXISTS";
     public static final String INVALID = "INVALID_REQUEST";
     public final static String RATE = "rate";
     public final static String SEARCH_NAME = "searchByName";

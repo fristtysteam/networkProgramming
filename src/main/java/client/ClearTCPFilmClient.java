@@ -9,7 +9,7 @@ import java.net.UnknownHostException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Client {
+public class ClearTCPFlimClient {
     private static boolean loggedIn;
 
     public static void main(String[] args) {

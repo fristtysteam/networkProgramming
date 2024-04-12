@@ -58,4 +58,18 @@ public class User {
         return Objects.hash(username);
     }
 
+
+    public String encode(String delimiter){
+        return this.username + delimiter + this.password;
+    }
+
+    public static User decode(String encoded, String delimiter){
+        String [] components  = encoded.split(delimiter);
+        if(components.length != 2){
+            return null;
+        }
+
+        return new User(components[0], components[1]);
+    }
+
 }

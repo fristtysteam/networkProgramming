@@ -1,9 +1,6 @@
 package Server;
 
-import business.FilmManager;
-import business.User;
-import business.UserManager;
-import business.VerifyCredentials;
+import business.*;
 import protocol.FilmService;
 
 import java.io.BufferedReader;
@@ -24,11 +21,11 @@ public class TcpServer {
 
             while (true) {
                 Socket clientSocket = listeningSocket.accept();
-                System.out.println("Client connected: " + clientSocket.getInetAddress());
+                System.out.println("ClearTCPFlimClient connected: " + clientSocket.getInetAddress());
 
                 handleClient(clientSocket);
 
-                System.out.println("Client disconnected.");
+                System.out.println("ClearTCPFlimClient disconnected.");
             }
         } catch (BindException e) {
             System.out.println("BindException occurred when attempting to bind to port " + FilmService.PORT);
@@ -117,7 +114,7 @@ public class TcpServer {
         }
 
         if (userManager.addUser(username, password)) {
-            User user = new User(username, username, 1);
+            User user = new User(username, password, true);
             return FilmService.SUCCESS_REGISTERR;
         } else {
             return "User already exists";
@@ -138,4 +135,22 @@ public class TcpServer {
         }
         return filmManager.rateFilm(parts[1], Double.parseDouble(parts[2])) ? FilmService.SUCCESS : FilmService.NO_MATCH;
     }
+
+    private static String addFilm(String[] parts, String title, String genre, double totalRatings, int numberOfRatings) {
+        if (filmManager.searchByTitle(title).equals(title)) {
+            return FilmService.EXISTS;
+        }
+        if (parts.length < 4) {
+            return FilmService.INVALID;
+        }
+        return filmManager.addFilm(new Film(title,genre,totalRatings, numberOfRatings))? FilmService.ADDED : FilmService.NO_MATCH;
+    }
+
+    private static boolean removeFilm(String title) {
+
+        return filmManager.removeFilm(title);//? FilmService.SUCCESS : FilmService.NO_MATCH;
+    }
+
 }
+
+
