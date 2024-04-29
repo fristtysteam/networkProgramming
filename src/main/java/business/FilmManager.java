@@ -92,5 +92,21 @@ public class FilmManager {
         Collections.sort(filmList, (f1, f2) -> f1.getTitle().compareToIgnoreCase(f2.getTitle()));
         return filmList;
     }
+    /**
+     * Searches for all films with a specific rating.
+     *
+     * @param rating the rating to search for
+     * @return An ArrayList of films with the specified rating.
+     */
+    public ArrayList<Film> searchByRating(int rating) {
+        ArrayList<Film> filmList = new ArrayList<>();
+        for (Map.Entry<String, Film> entry : films.entrySet()) {
+            Film film = entry.getValue();
+            if (film.getTotalRatings() == rating) {
+                filmList.add(film);
+            }
+        }
+        return filmList;
+    }
     }
 

@@ -55,6 +55,15 @@ public class UserManager {
         System.out.println("user by that name doesnt exist");
         return null;
     }
+    /**
+     * Checks if a password meets certain criteria.
+     *
+     * @param password the password to validate
+     * @return true if the password is valid, false otherwise
+     */
+    public static boolean isPasswordValid(String password) {
+        return password.length() >= 6;
+    }
 }
 
 
