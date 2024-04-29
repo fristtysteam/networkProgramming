@@ -1,0 +1,16 @@
+New Feature: Retrieve All Films
+
+Request:
+
+Request Format: GET_ALL_FILMS_REQUEST
+Parameters: None
+Description: Use this request to fetch a complete list of all films stored in the database.
+Possible Responses:
+
+Success Response:
+The server returns a comprehensive list containing all films.
+Failure Response:
+If there are no films available or if the request encounters an issue, the server sends an appropriate error message.
+Error Messages:
+"Sorry, there are no films available at the moment."
+"Oops! We encountered an issue while fetching the films from the database."
