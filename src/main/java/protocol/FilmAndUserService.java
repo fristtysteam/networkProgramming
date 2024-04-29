@@ -1,6 +1,6 @@
 package protocol;
 
-public class FilmService {
+public class FilmAndUserService {
     // Location information
     public static final String HOST = "localhost";
     public static final int PORT = 41235;
@@ -8,9 +8,7 @@ public class FilmService {
     // Delimiter
     public static final String DELIMITER = "%%";
 
-    // Requests
 
-    // Responses
 
     public static final String EXISTS = "EXISTS";
     public static final String INVALID = "INVALID_REQUEST";
@@ -24,7 +22,14 @@ public class FilmService {
 
     public final static String ADD_FILM_REQUEST = "ADD_FILM_REQUEST";
     public final static String REMOVE_FILM_REQUEST = "REMOVE_FILM_REQUEST";
-
+    public static final String INVALID_RATING_SUPPLIED_RATE_FILM_RESPONSE = "INVALID_RATING_SUPPLIED";
+    public static final String NOT_LOGGED_IN_RATE_FILM_RESPONSE = "NOT_LOGGED_IN";
+    public static final String NO_MATCH_FOUND_RATE_FILM_RESPONSE = "NO_MATCH_FOUND";
+    public static final String SUCCESSFUL_ADD_FILM_RESPONSE = "ADDED";
+    public static final String FAILED_ADD_FILM_RESPONSE = "EXISTS";
+    public static final String INSUFFICIENT_PERMISSIONS_ADD_FILM_RESPONSE = "INSUFFICIENT_PERMISSIONS";
+    public static final String SUCCESSFUL_REMOVE_FILM_RESPONSE = "REMOVED";
+    public static final String FAILED_REMOVE_FILM_RESPONSE = "NOT_FOUND";
 
     public final static String SEARCH_FILM_REQUEST = "SEARCH_FILM_REQUEST";
 

@@ -1,7 +1,7 @@
 package client;
 
 import business.User;
-import protocol.FilmService;
+import protocol.FilmAndUserService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,7 +17,7 @@ public class Client2 {
     private static boolean validClient = true;
 
     public static void main(String[] args) {
-        try (Socket dataSocket = new Socket(FilmService.HOST, FilmService.PORT)) {
+        try (Socket dataSocket = new Socket(FilmAndUserService.HOST, FilmAndUserService.PORT)) {
             try (Scanner input = new Scanner(dataSocket.getInputStream());
                  PrintWriter output = new PrintWriter(dataSocket.getOutputStream())) {
                 Scanner userInput = new Scanner(System.in);
@@ -81,7 +81,7 @@ public class Client2 {
                     System.out.println("Are you sure you want to exit? (Y/N)");
                     String exitChoice = userInput.nextLine().toUpperCase();
                     if (exitChoice.equals("Y")) {
-                        request = FilmService.EXIT;
+                        request = FilmAndUserService.EXIT;
                         valid = true;
                     }
                     break;
@@ -99,7 +99,7 @@ public class Client2 {
                     break;
                 case "3":
                     if (loggedIn) {
-                        request = FilmService.LOGOUT;
+                        request = FilmAndUserService.LOGOUT;
                         valid = true;
                     }
                     break;
@@ -112,13 +112,13 @@ public class Client2 {
                 case "5":
                     System.out.println("Enter film title: ");
                     String title = userInput.nextLine();
-                    request = FilmService.SEARCH_NAME + FilmService.DELIMITER + title;
+                    request = FilmAndUserService.SEARCH_NAME + FilmAndUserService.DELIMITER + title;
                     valid = true;
                     break;
                 case "6":
                     System.out.println("Enter genre: ");
                     String genre = userInput.nextLine();
-                    request = FilmService.SEARCH_GENRE + FilmService.DELIMITER + genre;
+                    request = FilmAndUserService.SEARCH_GENRE + FilmAndUserService.DELIMITER + genre;
                     valid = true;
                     break;
                 case "7":
@@ -138,7 +138,7 @@ public class Client2 {
                         System.out.println("Are you sure you want to shutdown server? (Y/N)");
                         String shutdownChoice = userInput.nextLine().toUpperCase();
                         if (shutdownChoice.equals("Y")) {
-                            request = FilmService.SHUTDOWN;
+                            request = FilmAndUserService.SHUTDOWN;
                             valid = true;
                         }
                     }
@@ -156,40 +156,40 @@ public class Client2 {
 
     public static void processResponse(String response, Scanner userInput) {
         switch (response) {
-            case FilmService.SUCCESS_ADMIN:
+            case FilmAndUserService.SUCCESS_ADMIN:
                 System.out.println("Successfully logged in as admin.");
                 loggedIn = true;
                 user.setAdminStatus(true);
                 break;
-            case FilmService.SUCCESS_USER:
+            case FilmAndUserService.SUCCESS_USER:
                 System.out.println("Successfully logged in as user.");
                 loggedIn = true;
                 user.setAdminStatus(false);
                 break;
-            case FilmService.SUCCESS_LOGOUT:
+            case FilmAndUserService.SUCCESS_LOGOUT:
                 System.out.println("Successfully logged out.");
                 loggedIn = false;
                 break;
-            case FilmService.ADDED:
+            case FilmAndUserService.ADDED:
                 System.out.println("Film added successfully.");
                 break;
-            case FilmService.REJECTED:
+            case FilmAndUserService.REJECTED:
                 System.out.println("Failed to add film. Film already exists.");
                 break;
-            case FilmService.LOGGED_OUT:
+            case FilmAndUserService.LOGGED_OUT:
                 System.out.println("You have been logged out.");
                 loggedIn = false;
                 break;
-            case FilmService.NOT_LOGGED_IN:
+            case FilmAndUserService.NOT_LOGGED_IN:
                 System.out.println("You are not logged in.");
                 loggedIn = false;
                 break;
-            case FilmService.SUCCESS_SHUTDOWN:
+            case FilmAndUserService.SUCCESS_SHUTDOWN:
                 System.out.println("Server shutdown successful.");
                 loggedIn = false;
                 validClient = false;
                 break;
-            case FilmService.NO_MATCH:
+            case FilmAndUserService.NO_MATCH:
                 System.out.println("No matching films found.");
                 break;
             default:
@@ -203,7 +203,7 @@ public class Client2 {
         String username = userInput.nextLine();
         System.out.println("Enter password: ");
         String password = userInput.nextLine();
-        return FilmService.REGISTER + FilmService.DELIMITER + username + FilmService.DELIMITER + password;
+        return FilmAndUserService.REGISTER + FilmAndUserService.DELIMITER + username + FilmAndUserService.DELIMITER + password;
     }
 
     public static String login(Scanner userInput) {
@@ -212,14 +212,14 @@ public class Client2 {
         String username = userInput.nextLine();
         System.out.println("Enter password: ");
         String password = userInput.nextLine();
-        return FilmService.LOGIN + FilmService.DELIMITER + username + FilmService.DELIMITER + password;
+        return FilmAndUserService.LOGIN + FilmAndUserService.DELIMITER + username + FilmAndUserService.DELIMITER + password;
     }
 
     public static String rateFilm(Scanner userInput) {
         System.out.println("Enter film title: ");
         String title = userInput.nextLine();
         int rating = getValidRating(userInput, "Rate the film from 1 to 10:");
-        return FilmService.RATE + FilmService.DELIMITER + title + FilmService.DELIMITER + rating;
+        return FilmAndUserService.RATE + FilmAndUserService.DELIMITER + title + FilmAndUserService.DELIMITER + rating;
     }
 
     public static String addFilm(Scanner userInput) {
@@ -228,19 +228,19 @@ public class Client2 {
         String title = userInput.nextLine();
         System.out.println("Enter genre: ");
         String genre = userInput.nextLine();
-        return FilmService.ADD_FILM_REQUEST + FilmService.DELIMITER + title + FilmService.DELIMITER + genre;
+        return FilmAndUserService.ADD_FILM_REQUEST + FilmAndUserService.DELIMITER + title + FilmAndUserService.DELIMITER + genre;
     }
 
     public static String removeFilm(Scanner userInput) {
         System.out.println("Remove a film: ");
         System.out.println("Enter title: ");
         String title = userInput.nextLine();
-        return FilmService.REMOVE_FILM_REQUEST + FilmService.DELIMITER + title;
+        return FilmAndUserService.REMOVE_FILM_REQUEST + FilmAndUserService.DELIMITER + title;
     }
 
     public static String searchByRating(Scanner userInput) {
         int rating = getValidRating(userInput, "Enter rating (1 to 10):");
-        return FilmService.RATE_FILM_REQUEST + FilmService.DELIMITER + rating;
+        return FilmAndUserService.RATE_FILM_REQUEST + FilmAndUserService.DELIMITER + rating;
     }
 
     public static int getValidRating(Scanner userInput, String prompt) {

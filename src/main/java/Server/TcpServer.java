@@ -1,7 +1,7 @@
 package Server;
 
 import business.*;
-import protocol.FilmService;
+import protocol.FilmAndUserService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,7 +16,7 @@ public class TcpServer {
     private static UserManager userManager;
 
     public static void main(String[] args) {
-        try (ServerSocket listeningSocket = new ServerSocket(FilmService.PORT)) {
+        try (ServerSocket listeningSocket = new ServerSocket(FilmAndUserService.PORT)) {
             initialize();
 
             while (true) {
@@ -28,7 +28,7 @@ public class TcpServer {
                 System.out.println("ClearTCPFlimClient disconnected.");
             }
         } catch (BindException e) {
-            System.out.println("BindException occurred when attempting to bind to port " + FilmService.PORT);
+            System.out.println("BindException occurred when attempting to bind to port " + FilmAndUserService.PORT);
             System.out.println(e.getMessage());
         } catch (IOException e) {
             System.out.println("IOException occurred on server socket");
@@ -54,7 +54,7 @@ public class TcpServer {
 
                 out.println(response);
 
-                if (response.equals(FilmService.EXIT) || response.equals(FilmService.SHUTDOWN)) {
+                if (response.equals(FilmAndUserService.EXIT) || response.equals(FilmAndUserService.SHUTDOWN)) {
                     break;
                 }
             }
@@ -70,9 +70,9 @@ public class TcpServer {
     }
 
     private static String processRequest(String request) {
-        String[] parts = request.split(FilmService.DELIMITER);
+        String[] parts = request.split(FilmAndUserService.DELIMITER);
         if (parts.length < 2) {
-            return FilmService.INVALID;
+            return FilmAndUserService.INVALID;
         }
 
         String action = parts[0];
@@ -80,26 +80,26 @@ public class TcpServer {
         String password = parts.length > 2 ? parts[2] : "";
 
         switch (action) {
-            case FilmService.REGISTER:
+            case FilmAndUserService.REGISTER:
                 return register(parts);
-            case FilmService.LOGIN:
+            case FilmAndUserService.LOGIN:
                 return login(username, password);
-            case FilmService.LOGOUT:
-                return FilmService.LOGGED_OUT;
-            case FilmService.RATE:
+            case FilmAndUserService.LOGOUT:
+                return FilmAndUserService.LOGGED_OUT;
+            case FilmAndUserService.RATE:
                 return rateFilm(parts);
-            case FilmService.EXIT:
-                return FilmService.EXIT;
-            case FilmService.SHUTDOWN:
-                return FilmService.SHUTDOWN;
+            case FilmAndUserService.EXIT:
+                return FilmAndUserService.EXIT;
+            case FilmAndUserService.SHUTDOWN:
+                return FilmAndUserService.SHUTDOWN;
             default:
-                return FilmService.INVALID;
+                return FilmAndUserService.INVALID;
         }
     }
 
     private static String register(String[] components) {
         if (components.length != 3) {
-            return FilmService.INVALID;
+            return FilmAndUserService.INVALID;
         }
 
         String username = components[1];
@@ -115,7 +115,7 @@ public class TcpServer {
 
         if (userManager.addUser(username, password)) {
             User user = new User(username, password, true);
-            return FilmService.SUCCESS_REGISTERR;
+            return FilmAndUserService.SUCCESS_REGISTERR;
         } else {
             return "User already exists";
         }
@@ -124,26 +124,26 @@ public class TcpServer {
     private static String login(String username, String password) {
         User user = userManager.searchByUsername(username);
         if (user != null && user.getPassword().equals(password)) {
-            return user.isAdminStatus() ? FilmService.SUCCESS_ADMIN : FilmService.SUCCESS_USER;
+            return user.isAdminStatus() ? FilmAndUserService.SUCCESS_ADMIN : FilmAndUserService.SUCCESS_USER;
         }
-        return FilmService.FAILED;
+        return FilmAndUserService.FAILED;
     }
 
     private static String rateFilm(String[] parts) {
         if (parts.length < 3) {
-            return FilmService.INVALID;
+            return FilmAndUserService.INVALID;
         }
-        return filmManager.rateFilm(parts[1], Double.parseDouble(parts[2])) ? FilmService.SUCCESS : FilmService.NO_MATCH;
+        return filmManager.rateFilm(parts[1], Double.parseDouble(parts[2])) ? FilmAndUserService.SUCCESS : FilmAndUserService.NO_MATCH;
     }
 
     private static String addFilm(String[] parts, String title, String genre, double totalRatings, int numberOfRatings) {
         if (filmManager.searchByTitle(title).equals(title)) {
-            return FilmService.EXISTS;
+            return FilmAndUserService.EXISTS;
         }
         if (parts.length < 4) {
-            return FilmService.INVALID;
+            return FilmAndUserService.INVALID;
         }
-        return filmManager.addFilm(new Film(title,genre,totalRatings, numberOfRatings))? FilmService.ADDED : FilmService.NO_MATCH;
+        return filmManager.addFilm(new Film(title,genre,totalRatings, numberOfRatings))? FilmAndUserService.ADDED : FilmAndUserService.NO_MATCH;
     }
 
     private static boolean removeFilm(String title) {

@@ -93,6 +93,21 @@ public class FilmManager {
         return filmList;
     }
     /**
+     * Calculates the average rating of all films.
+     *
+     * @return The average rating of all films.
+     */
+    public double getAverageRating() {
+        double totalRatings = 0;
+        int numberOfFilms = 0;
+        for (Map.Entry<String, Film> entry : films.entrySet()) {
+            Film film = entry.getValue();
+            totalRatings += film.getTotalRatings();
+            numberOfFilms++;
+        }
+        return numberOfFilms > 0 ? totalRatings / numberOfFilms : 0;
+    }
+    /**
      * Searches for all films with a specific rating.
      *
      * @param rating the rating to search for
@@ -108,5 +123,16 @@ public class FilmManager {
         }
         return filmList;
     }
+
+    /**
+     * Retrieves all films stored in the film manager.
+     *
+     * @return An ArrayList containing all films.
+     */
+    public ArrayList<Film> getAllFilms() {
+        return new ArrayList<>(films.values());
+    }
+
+
     }
 

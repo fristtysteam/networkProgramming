@@ -4,7 +4,7 @@ import business.Film;
 import business.FilmManager;
 import business.User;
 import business.UserManager;
-import protocol.FilmService;
+import protocol.FilmAndUserService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -49,74 +49,74 @@ public class HandleClient implements Runnable {
     }
 
     private String processRequest(String message) {
-        String[] components = message.split(FilmService.DELIMITER);
+        String[] components = message.split(FilmAndUserService.DELIMITER);
         if (components.length == 0) {
             System.out.println("Invalid request format");
-            return FilmService.INVALID;
+            return FilmAndUserService.INVALID;
         }
         String action = components[0];
         switch (action) {
-            case FilmService.REGISTER:
+            case FilmAndUserService.REGISTER:
                 return register(components);
-            case FilmService.LOGIN:
+            case FilmAndUserService.LOGIN:
                 return login(components);
-            case FilmService.LOGOUT:
+            case FilmAndUserService.LOGOUT:
                 return logout();
-            case FilmService.RATE_FILM_REQUEST:
+            case FilmAndUserService.RATE_FILM_REQUEST:
                 return rateFilm(components);
-            case FilmService.SEARCH_FILM_REQUEST:
+            case FilmAndUserService.SEARCH_FILM_REQUEST:
                 return searchFilm(components);
-            case FilmService.SEARCH_FILM_BY_GENRE_REQUEST:
+            case FilmAndUserService.SEARCH_FILM_BY_GENRE_REQUEST:
                 return searchByGenre(components);
-            case FilmService.ADD_FILM_REQUEST:
+            case FilmAndUserService.ADD_FILM_REQUEST:
                 return addFilm(components);
-            case FilmService.REMOVE_FILM_REQUEST:
+            case FilmAndUserService.REMOVE_FILM_REQUEST:
                 return removeFilm(components);
-            case FilmService.EXIT:
+            case FilmAndUserService.EXIT:
                 return exit();
-            case FilmService.SHUTDOWN:
+            case FilmAndUserService.SHUTDOWN:
                 return shutdownServer();
             default:
                 System.out.println("Unknown action: " + action);
-                return FilmService.INVALID;
+                return FilmAndUserService.INVALID;
         }
     }
 
     private String register(String[] components) {
-        String response = FilmService.FAILED;
+        String response = FilmAndUserService.FAILED;
         if (components.length == 3) {
             String username = components[1];
             String password = components[2];
             if (username.length() >= 3 && UserManager.isPasswordValid(password)) {
                 if (userManager.addUser(username, password)) {
                     currentUser = new User(username, username, true);
-                    response = FilmService.SUCCESS_REGISTERR;
+                    response = FilmAndUserService.SUCCESS_REGISTERR;
                 } else {
-                    response = FilmService.REJECTED;
+                    response = FilmAndUserService.REJECTED;
                 }
             } else {
-                response = FilmService.INVALID;
+                response = FilmAndUserService.INVALID;
             }
         } else {
-            response = FilmService.INVALID;
+            response = FilmAndUserService.INVALID;
         }
         return response;
     }
 
     private String login(String[] components) {
-        String response = FilmService.FAILED;
+        String response = FilmAndUserService.FAILED;
         if (components.length == 3) {
             String username = components[1];
             String password = components[2];
             User user = userManager.searchByUsername(username);
             if (user != null && user.getPassword().equals(password)) {
                 currentUser = user;
-                response = user.isAdminStatus() ? FilmService.SUCCESS_ADMIN : FilmService.SUCCESS_USER;
+                response = user.isAdminStatus() ? FilmAndUserService.SUCCESS_ADMIN : FilmAndUserService.SUCCESS_USER;
             } else {
-                response = FilmService.NO_MATCH;
+                response = FilmAndUserService.NO_MATCH;
             }
         } else {
-            response = FilmService.INVALID;
+            response = FilmAndUserService.INVALID;
         }
         return response;
     }
@@ -125,9 +125,9 @@ public class HandleClient implements Runnable {
         if (currentUser != null) {
             currentUser = null;
             state = false;
-            return FilmService.SUCCESS_LOGOUT;
+            return FilmAndUserService.SUCCESS_LOGOUT;
         } else {
-            return FilmService.NOT_LOGGED_IN;
+            return FilmAndUserService.NOT_LOGGED_IN;
         }
     }
 
@@ -139,36 +139,36 @@ public class HandleClient implements Runnable {
                     int rating = Integer.parseInt(components[2]);
                     if (rating >= 0 && rating <= 10) {
                         boolean success = filmManager.rateFilm(filmTitle, rating);
-                        return success ? FilmService.SUCCESS : FilmService.FAILED;
+                        return success ? FilmAndUserService.SUCCESS : FilmAndUserService.FAILED;
                     } else {
-                        return FilmService.NO_MATCH;
+                        return FilmAndUserService.NO_MATCH;
                     }
                 } catch (NumberFormatException e) {
-                    return FilmService.INVALID;
+                    return FilmAndUserService.INVALID;
                 }
             } else {
-                return FilmService.NOT_LOGGED_IN;
+                return FilmAndUserService.NOT_LOGGED_IN;
             }
         } else {
-            return FilmService.INVALID;
+            return FilmAndUserService.INVALID;
         }
     }
 
     private String searchFilm(String[] components) {
         if (components.length == 2) {
             Film film = filmManager.searchByTitle(components[1]);
-            return (film != null) ? film.toString() : FilmService.NO_MATCH;
+            return (film != null) ? film.toString() : FilmAndUserService.NO_MATCH;
         } else {
-            return FilmService.INVALID;
+            return FilmAndUserService.INVALID;
         }
     }
 
     private String searchByGenre(String[] components) {
         if (components.length == 2) {
             ArrayList<Film> films = filmManager.searchByGenre(components[1]);
-            return (films != null && !films.isEmpty()) ? films.toString() : FilmService.NO_MATCH;
+            return (films != null && !films.isEmpty()) ? films.toString() : FilmAndUserService.NO_MATCH;
         } else {
-            return FilmService.INVALID;
+            return FilmAndUserService.INVALID;
         }
     }
 
@@ -177,12 +177,12 @@ public class HandleClient implements Runnable {
             try {
                 int rating = Integer.parseInt(components[1]);
                 ArrayList<Film> films = filmManager.searchByRating(rating);
-                return (films != null && !films.isEmpty()) ? films.toString() : FilmService.NO_MATCH;
+                return (films != null && !films.isEmpty()) ? films.toString() : FilmAndUserService.NO_MATCH;
             } catch (NumberFormatException e) {
-                return FilmService.INVALID;
+                return FilmAndUserService.INVALID;
             }
         } else {
-            return FilmService.INVALID;
+            return FilmAndUserService.INVALID;
         }
     }
 
@@ -193,15 +193,15 @@ public class HandleClient implements Runnable {
                 String genre = components[2];
                 Film film = new Film(title, genre, 0.0, 0);
                 if (filmManager.addFilm(film)) {
-                    return FilmService.ADDED;
+                    return FilmAndUserService.ADDED;
                 } else {
-                    return FilmService.REJECTED;
+                    return FilmAndUserService.REJECTED;
                 }
             } else {
-                return FilmService.NO_MATCH;
+                return FilmAndUserService.NO_MATCH;
             }
         } else {
-            return FilmService.INVALID;
+            return FilmAndUserService.INVALID;
         }
     }
 
@@ -210,15 +210,15 @@ public class HandleClient implements Runnable {
             if (currentUser != null && currentUser.isAdminStatus()) {
                 String title = components[1];
                 if (filmManager.removeFilm(title)) {
-                    return FilmService.SUCCESS;
+                    return FilmAndUserService.SUCCESS;
                 } else {
-                    return FilmService.FAILED;
+                    return FilmAndUserService.FAILED;
                 }
             } else {
-                return FilmService.NO_MATCH;
+                return FilmAndUserService.NO_MATCH;
             }
         } else {
-            return FilmService.INVALID;
+            return FilmAndUserService.INVALID;
         }
     }
 
@@ -226,13 +226,13 @@ public class HandleClient implements Runnable {
         if (currentUser != null) {
             currentUser = null;
             state = false;
-            return FilmService.EXIT;
+            return FilmAndUserService.EXIT;
         } else {
-            return FilmService.INVALID;
+            return FilmAndUserService.INVALID;
         }
     }
 
     private String shutdownServer() {
-        return FilmService.SUCCESS_SHUTDOWN;
+        return FilmAndUserService.SUCCESS_SHUTDOWN;
     }
 }
