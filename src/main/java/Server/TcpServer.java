@@ -115,7 +115,7 @@ public class TcpServer {
 
         if (userManager.addUser(username, password)) {
             User user = new User(username, password, true);
-            return FilmAndUserService.SUCCESS_REGISTERR;
+            return FilmAndUserService.SUCCESS_REGISTER;
         } else {
             return "User already exists";
         }

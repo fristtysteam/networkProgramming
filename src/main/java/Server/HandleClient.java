@@ -90,7 +90,7 @@ public class HandleClient implements Runnable {
             if (username.length() >= 3 && UserManager.isPasswordValid(password)) {
                 if (userManager.addUser(username, password)) {
                     currentUser = new User(username, username, true);
-                    response = FilmAndUserService.SUCCESS_REGISTERR;
+                    response = FilmAndUserService.SUCCESS_REGISTER;
                 } else {
                     response = FilmAndUserService.REJECTED;
                 }
@@ -219,6 +219,19 @@ public class HandleClient implements Runnable {
             }
         } else {
             return FilmAndUserService.INVALID;
+        }
+    }
+    private String getAllFilms() {
+        ArrayList<Film> allFilms = filmManager.getAllFilms();
+        if (allFilms != null && !allFilms.isEmpty()) {
+            StringBuilder responseBuilder = new StringBuilder();
+            responseBuilder.append(FilmAndUserService.GET_ALL_FILMS_RESPONSE).append(FilmAndUserService.DELIMITER);
+            for (Film film : allFilms) {
+                responseBuilder.append(film.toString()).append(FilmAndUserService.DELIMITER);
+            }
+            return responseBuilder.toString();
+        } else {
+            return FilmAndUserService.FAILED;
         }
     }
 
